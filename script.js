@@ -20,7 +20,6 @@ const addItem = (e) => {
   } //end If
 
   //create new <li>
-  console.log("Success");
   const li = document.createElement("li");
   li.appendChild(document.createTextNode(newItem));
   //create new <button>
@@ -57,16 +56,43 @@ const removeItem = (e) => {
   console.log(e.target.parentElement.classList);
 
   if (e.target.parentElement.classList.contains("remove-item")) {
+    if(confirm('Are you sure?')){
     e.target.parentElement.parentElement.remove();
+    }
   }
   checkUI();
 }; //end removeItem
 
 //remove all items when clear all pressed
 const clearItems = () => {
-  itemList.innerHTML = "";
+    while(itemList.firstChild){
+        itemList.removeChild(itemList.firstChild);
+    }
+//   itemList.innerHTML = "";
   checkUI();
 };//end clearIems
+
+//filter the list based on text input in field
+const filterList = (e) => {
+    //create node of list items
+    const items = itemList.querySelectorAll('li');
+    const text = e.target.value.toLowerCase();
+    
+    // loop through list items
+    items.forEach(item => {
+        //get text content of item, set to lower case
+        const itemName = item.firstChild.textContent.toLowerCase();
+
+        //check if text is part of itemName
+        if(itemName.indexOf(text) != -1){
+            item.style.display = 'flex';
+        }else{
+            item.style.display = 'none';
+        }
+    })
+
+    console.log(text);
+}//end filterList
 
 //check application state
 const checkUI = () => {
@@ -81,9 +107,13 @@ const checkUI = () => {
 
 }//end checkUI
 
+
+
 //  -------------------- Event Listeners -----------------------
 
 itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 clearBtn.addEventListener("click", clearItems);
+itemFilter.addEventListener("input", filterList);
+
 checkUI();
